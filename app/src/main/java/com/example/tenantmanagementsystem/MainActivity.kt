@@ -17,8 +17,8 @@ class MainActivity : AppCompatActivity() {
             val phone = binding.phoneEditText.text.toString()
             val rent = binding.rentEditText.text.toString()
 
-            binding.tenantResultTextView.text =
-                "Tenant: $name\nPhone: $phone\nRent: KSh $rent"
+            val tenant = Tenant(name, phone, rent)
+            binding.tenant = tenant
         }
     }
 }
