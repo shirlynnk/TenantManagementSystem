@@ -14,6 +14,9 @@ class MainActivity : AppCompatActivity() {
     // The most recently saved tenant. Lost on rotation unless we save it
     private var lastTenant: Tenant? = null
 
+    // NEW: how many times SAVE has been tapped
+    private var saveCount = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d("TENANT_LIFECYCLE", "MainActivity: onCreate")
@@ -32,6 +35,10 @@ class MainActivity : AppCompatActivity() {
                 lastTenant = tenant
                 binding.tenant = tenant
             }
+
+            // NEW: read the count back (0 if nothing was saved)
+            saveCount = savedInstanceState.getInt("save_count", 0)
+            Toast.makeText(this, "SAVE tapped $saveCount times", Toast.LENGTH_SHORT).show()
         }
 
         // Welcome the user (only the first time, not after rotating)
@@ -62,8 +69,9 @@ class MainActivity : AppCompatActivity() {
             if (!valid) return@setOnClickListener
 
             val tenant = Tenant(name, phone, rent)
-            binding.tenant = tenant   // Data Binding shows the summary
-            lastTenant = tenant       // remember it for CALL TENANT
+            binding.tenant = tenant
+            lastTenant = tenant
+            saveCount++   // NEW: count this tap
         }
 
         // ── CALL TENANT button (implicit Intent) ──────────────────
@@ -104,6 +112,9 @@ class MainActivity : AppCompatActivity() {
             outState.putString("tenant_phone", tenant.phone)
             outState.putString("tenant_rent", tenant.rent)
         }
+
+        // NEW: save the count under its own key
+        outState.putInt("save_count", saveCount)
     }
 
     // ── LIFECYCLE METHODS ─────────────────────────────────────────
