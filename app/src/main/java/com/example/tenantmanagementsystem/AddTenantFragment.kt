@@ -15,28 +15,39 @@ class AddTenantFragment : Fragment() {
     private var _binding: FragmentAddTenantBinding? = null
     private val binding get() = _binding!!
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Log.d("TENANT_LIFECYCLE", "   AddTenantFragment: onCreate")
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        Log.d("TENANT_LIFECYCLE", "   AddTenantFragment: onCreateView")
         _binding = FragmentAddTenantBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d("TENANT_LIFECYCLE", "   AddTenantFragment: onViewCreated")
 
         binding.saveButton.setOnClickListener {
-            Log.d("TENANT_LIFECYCLE", "SAVE clicked")
-            Toast.makeText(requireContext(), "SAVE clicked", Toast.LENGTH_SHORT).show()
-
             val name = binding.tenantNameEditText.text.toString().trim()
             val phone = binding.phoneEditText.text.toString().trim()
             val rent = binding.rentEditText.text.toString().trim()
 
             if (name.isEmpty() || phone.isEmpty() || rent.isEmpty()) {
                 Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // Exercise 2: refuse to save if the phone has fewer than 10 digits
+            val digitCount = phone.count { it.isDigit() }
+            if (digitCount < 10) {
+                binding.phoneEditText.error = "Enter a valid phone number"
                 return@setOnClickListener
             }
 
@@ -53,8 +64,34 @@ class AddTenantFragment : Fragment() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        Log.d("TENANT_LIFECYCLE", "   AddTenantFragment: onStart")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("TENANT_LIFECYCLE", "   AddTenantFragment: onResume")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d("TENANT_LIFECYCLE", "   AddTenantFragment: onPause")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("TENANT_LIFECYCLE", "   AddTenantFragment: onStop")
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
+        Log.d("TENANT_LIFECYCLE", "   AddTenantFragment: onDestroyView")
         _binding = null
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("TENANT_LIFECYCLE", "   AddTenantFragment: onDestroy")
     }
 }
